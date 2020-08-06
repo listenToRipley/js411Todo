@@ -1,16 +1,14 @@
-import React, {Component} from 'react';
+import React from 'react';
 
-class MyFirstComponent extends Component {
-  constructor(props) {
-      return (
-        <h2>I just want this to work</h2>
-        {/* // <div>
-        // <li>{props.listValue}</li>
-        // <button onClick={this.deleteButton}>Delete</button>
-        // </div> */}
-      )
-
-  }
+const FirstComponent = (props) => {
+  // console.log('this FirstComponent Props @@@', props.todos)
+  // console.log(`and the props.listValue is ${props.listValue}`)
+  return (
+    <div>
+       <li>{props.listValue}</li>
+       <button key={props.index} onClick={props.deleteThis}>Delete</button>
+    </div>
+  )
 }
 
-export default MyFirstComponent
+export default FirstComponent
