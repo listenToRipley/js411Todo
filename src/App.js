@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
-import ReactDom from 'react-dom'
 import FirstComponent from './FirstComponent'
+import UpdateContent from './UpdateContent'
 
 class App extends Component {
   constructor(props) {
@@ -8,28 +8,38 @@ class App extends Component {
     this.state = {
       text: '',
       todos: [],
-      isClicked: false
+      isClicked: false,
+      status: '' //how to do this? 
     };
   };
 
-   onChange = e => {
-    //  console.log(`this is the state ${this.state.isClicked}`)
+  //the changing state of the input field 
+   onChange = event => {
      this.setState({
-       text: e.target.value
+       text: event.target.value,
      })
+    //  console.log('this is the text of onChange :', this.setState)
    }
    
-   changeisClickedState = event => {
+   //updates the content of the array with items that were recently added, makes sure the input field remains blank without the previous entry being place in there 
+   //handles Clicked State for add
+   changeIsClickedState = event => {
      event.preventDefault();
+     let ifClicked = this.state.isClicked == false ? true : false
+    console.log('this is',event)
     //  console.log(`this is the current state: ${this.state.todos}`)
+
+    //should add logic to prevent blank field 
      this.setState({
        todos: [... this.state.todos, this.state.text],
-       text: ''
+       text: '',
+       isClicked: ifClicked
      })
    }
 
+   //add the delete button 
    deleteItem = (index) => () => {
-    console.log('here is the index from the delete item',index)
+    // console.log('here is the index from the delete item',index)
     //this is making a copy
     let todoList = [... this.state.todos]
     todoList.splice(index, 1)
@@ -40,19 +50,22 @@ class App extends Component {
 
     render() {
 
+      let mapTodos = this.state.todos.map((todo, index) => {
+        return <FirstComponent key={index} deleteThis={this.deleteItem(index)} listValue={todo}/> 
+       })
+
       return (
         <div className="App">
         <h1>Make a To Do List</h1>
+        {/* locates the input field provides the event function the sets the state of this element */}
           <input value={this.state.text} onChange={this.onChange}/>
-            <button onClick={this.changeisClickedState}>{`${this.state.isClicked}`}</button>
+          {/* this allows the content to be added to the new array, updating the render once the button is clicked*/}
+            <button onClick={this.changeIsClickedState}>{`${this.state.isClicked}`}</button>
          <div>
             <ul>
-              {this.state.todos.map((todo, index) => {
-                return <FirstComponent key={index} deleteThis={this.deleteItem(index)} listValue={todo}/> 
-               })
-               }
+            {/* creates the new list of items from the todo array*/}
+              {mapTodos}
              </ul>
-            <FirstComponent todos={this.state.todos}/>
           </div>     
       </div>
       )
