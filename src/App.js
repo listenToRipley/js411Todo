@@ -1,6 +1,5 @@
 import React, {Component} from 'react';
 import FirstComponent from './FirstComponent'
-import UpdateContent from './UpdateContent'
 
 class App extends Component {
   constructor(props) {
@@ -9,10 +8,23 @@ class App extends Component {
       text: '',
       todos: [],
       isClicked: false,
-      status: '' //how to do this? 
     };
   };
+   updateContent = (targetIndex, newText) => {
+    
+    let updatedTodos = this.state.todos.map((todo, index) => (
+      index === targetIndex ?
+      (todo.text: newText) :
+      todo 
+    ));
 
+    this.setState({
+      todos: updatedTodos
+    });
+    //find the todo item in index
+    //change the todo.text = newText
+
+  }
   //the changing state of the input field 
    onChange = event => {
      this.setState({
@@ -31,7 +43,11 @@ class App extends Component {
 
     //should add logic to prevent blank field 
      this.setState({
-       todos: [... this.state.todos, this.state.text],
+       todos: [... this.state.todos, 
+        {toDoText: this.state.text,
+        isEdited: false,
+        status: ''
+        }],
        text: '',
        isClicked: ifClicked
      })
@@ -51,16 +67,24 @@ class App extends Component {
     render() {
 
       let mapTodos = this.state.todos.map((todo, index) => {
-        return <FirstComponent key={index} deleteThis={this.deleteItem(index)} listValue={todo}/> 
+        return <FirstComponent 
+          key={index} 
+          deleteThis={this.deleteItem(index)} 
+          // updateThis={this.updateContent(targetIndex, newText)}
+          listValue={todo.toDoText} edit={todo.isEdited}/> 
        })
 
       return (
         <div className="App">
         <h1>Make a To Do List</h1>
         {/* locates the input field provides the event function the sets the state of this element */}
-          <input value={this.state.text} onChange={this.onChange}/>
+          <input 
+            value={this.state.text} 
+            onChange={this.onChange}/>
           {/* this allows the content to be added to the new array, updating the render once the button is clicked*/}
-            <button onClick={this.changeIsClickedState}>{`${this.state.isClicked}`}</button>
+            <button 
+              onClick={this.changeIsClickedState}>
+                {`${this.state.isClicked}`}</button>
          <div>
             <ul>
             {/* creates the new list of items from the todo array*/}
